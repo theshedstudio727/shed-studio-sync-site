@@ -7,9 +7,10 @@ interface Props {
   youtubeId?: string;
   audioUrl?: string;
   vertical?: boolean;
+  isNew?: boolean;
 }
 
-const { title, tags, bpm, key, youtubeId, audioUrl, vertical } = Astro.props;
+const { title, tags, bpm, key, youtubeId, audioUrl, vertical, isNew } = Astro.props;
 const uid = `track-${youtubeId ?? audioUrl?.split('/').pop()?.replace(/\W/g, '') ?? title.replace(/\W/g, '')}`;
 ---
 
@@ -41,7 +42,14 @@ const uid = `track-${youtubeId ?? audioUrl?.split('/').pop()?.replace(/\W/g, '')
       </span>
     </button>
     <div class="min-w-0 flex-1">
-      <h3 class="font-display text-lg leading-snug text-paper">{title}</h3>
+      <h3 class="font-display text-lg leading-snug text-paper">
+        {title}
+        {isNew && (
+          <span class="new-badge ml-2 inline-block rounded-full bg-brass/15 px-2 py-0.5 align-middle font-mono text-[9px] font-normal uppercase tracking-[0.12em] text-brass-bright">
+            New
+          </span>
+        )}
+      </h3>
       <div class="mt-2 flex flex-wrap gap-2">
         {tags.map((tag) => (
           <span class="font-mono text-[10px] uppercase tracking-[0.1em] text-ash">{tag}</span>
@@ -117,8 +125,23 @@ const uid = `track-${youtubeId ?? audioUrl?.split('/').pop()?.replace(/\W/g, '')
       transform: rotate(360deg);
     }
   }
+  .new-badge {
+    animation: badge-pulse 2.2s ease-in-out infinite;
+  }
+  @keyframes badge-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
   @media (prefers-reduced-motion: reduce) {
     .vinyl-disc.spinning {
+      animation: none;
+    }
+    .new-badge {
       animation: none;
     }
   }

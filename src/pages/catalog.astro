@@ -3,51 +3,24 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import TrackCard from '../components/TrackCard.astro';
 import headerPhoto from '../assets/photos/headphones-mic.jpg';
-import { fetchCatalog } from '../lib/catalog';
+import { fetchCatalog, curatedTracks, sortByNewest } from '../lib/catalog';
 
-// The full set of published Retro Rewind tracks, verified embeddable
-// (checked via YouTube's oEmbed endpoint) 2026-08-18. Deliberately
-// excludes 6 other published videos: 3 name a real artist directly
-// (Fleetwood Mac / Daft Punk / Gorillaz "Era" titles) which violates the
-// standing never-name-a-specific-artist guardrail (see
-// workflows/daily_script_pipeline.md in youtube-content-agent) and is a
-// real risk to show on a page pitching "license our original music"; 3
-// more are covers/remixes of existing songs, not original compositions,
-// so they don't belong on an "original, licensable" catalog either.
-// No bpm/key listed - can't verify without actually analyzing the audio,
-// and inventing plausible-sounding numbers on a page music supervisors
-// use for real editing decisions isn't something to fake.
-const curatedTracks = [
-  { title: '2000s Neo-Soul, Reworked as Melodic Techno', tags: ['Neo-Soul', 'Techno', '2000s'], youtubeId: 'O0jXZ6HIFI0', vertical: true },
-  { title: '60s Southern Soul, Reworked as Drum & Bass', tags: ['Soul', 'Drum & Bass', '60s'], youtubeId: 'X3KI97TyQcs', vertical: true },
-  { title: '70s Philly Soul, Reworked as Deep House', tags: ['Soul', 'Deep House', '70s'], youtubeId: '7hLFu-iIHho', vertical: true },
-  { title: 'Hát Bội Opera, Reimagined as Trap', tags: ['Vietnamese', 'Trap', 'Traditional'], youtubeId: 'KN9TY3cjgdI', vertical: true },
-  { title: 'Hò Sông River Work Songs, Reimagined as Boom-Bap Hip-Hop', tags: ['Vietnamese', 'Hip-Hop', 'Traditional'], youtubeId: 'CA1S1jO_dxo', vertical: true },
-  { title: 'Vọng Cổ Ballads, Reimagined as Modern R&B', tags: ['Vietnamese', 'R&B', 'Ballad'], youtubeId: 'Rxi2BsirMS4', vertical: true },
-  { title: 'Hát Xẩm Street Ballads, Reimagined as Boom-Bap Hip-Hop', tags: ['Vietnamese', 'Hip-Hop', 'Traditional'], youtubeId: 'BRDy1atELZ4', vertical: true },
-  { title: 'Quan Họ Folk Singing, Reimagined as Modern R&B', tags: ['Vietnamese', 'R&B', 'Folk'], youtubeId: 'GditsRA95SI', vertical: true },
-  { title: 'Imperial Hue Court Music, Reimagined as Trap', tags: ['Vietnamese', 'Trap', 'Traditional'], youtubeId: 'Y8-_LF-GMCQ', vertical: true },
-  { title: 'An Ancient Vietnamese Ca Trù Chamber Piece', tags: ['Vietnamese', 'Chamber', 'Traditional'], youtubeId: 'FiliZ9hy7NI', vertical: true },
-  { title: 'A Golden-Era 1960s Vietnamese Bolero Ballad', tags: ['Vietnamese', 'Bolero', '60s'], youtubeId: 'xZuuM4yk5WY', vertical: true },
-  { title: 'A Lost 70s Laurel Canyon Folk-Rock Harmony Song', tags: ['Folk-Rock', '70s', 'Harmony'], youtubeId: 'aAUDy66_pRQ', vertical: true },
-  { title: 'A Lost 60s Motown-Style Soul Single', tags: ['Soul', 'Motown', '60s'], youtubeId: 'AMVpxGMsO08', vertical: true },
-  { title: 'A Lost 80s Japanese City Pop Night Drive Anthem', tags: ['City Pop', '80s', 'Nocturnal'], youtubeId: 'x0AAfaj-AL0', vertical: true },
-  { title: 'A 90s Grunge Ballad, Built From Scratch', tags: ['Grunge', '90s', 'Ballad'], youtubeId: 'XMERQpyOki8', vertical: true },
-  { title: 'A Golden-Era 90s Bollywood-Style Romantic Ballad', tags: ['Bollywood', '90s', 'Romantic'], youtubeId: 'ECM_1ft5g8M', vertical: true },
-  { title: 'A Lost 80s New Wave Synth-Pop Anthem', tags: ['Synth-Pop', '80s', 'New Wave'], youtubeId: 'YkDrm9qbMUg', vertical: true },
-  { title: 'A 90s R&B Slow Jam, Built From Scratch', tags: ['R&B', '90s', 'Slow Jam'], youtubeId: 'XZug3oqT0zA', vertical: true },
-  { title: 'The Golden Era of Sultry 70s-80s Soul & R&B', tags: ['Soul', 'R&B', '70s-80s'], youtubeId: 'mq3febWho6w', vertical: true },
-  { title: 'A Lost 80s Italo Disco Anthem', tags: ['Disco', '80s', 'Euphoric'], youtubeId: 'ITejVPeBs_s', vertical: true },
-];
+const NEW_COUNT = 3;
 
 // Real catalog from Supabase (see src/lib/catalog.ts) takes priority once it
-// has data. Falls back to the curated YouTube-embedded picks above when the
-// live catalog is empty - true as of 2026-08-18, the table was just created.
+// has data. Falls back to the curated YouTube-embedded picks when the live
+// catalog is empty - true as of 2026-08-18, the table was just created.
+// Live rows are already ordered newest-first (generated_at.desc); the
+// fallback set is sorted by each video's real YouTube publish date so
+// "new releases" reflects what's actually newest, not an arbitrary pick.
 const liveCatalog = await fetchCatalog();
 const usingLiveCatalog = liveCatalog.length > 0;
-const tracks = usingLiveCatalog
+const orderedTracks = usingLiveCatalog
   ? liveCatalog.map((t) => ({ title: t.title, tags: t.styleTags, audioUrl: t.audioUrl }))
-  : curatedTracks;
+  : sortByNewest(curatedTracks).map(({ releasedAt, ...rest }) => rest);
+
+const tracks = orderedTracks.map((t, i) => ({ ...t, isNew: i < NEW_COUNT }));
+const justDropped = tracks.slice(0, NEW_COUNT);
 
 const allTags = [...new Set(tracks.flatMap((t) => t.tags))].sort();
 ---
@@ -78,6 +51,22 @@ const allTags = [...new Set(tracks.flatMap((t) => t.tags))].sort();
         ? 'Every track below is a real, original composition from the catalog. Filter by mood or genre to get a feel for the range, then tell us what you actually need.'
         : "This is a small preview set, not the full catalog — every project is composed fresh for its scene. Filter by mood or genre to get a feel for the range, then tell us what you actually need."}
     </p>
+  </section>
+
+  <section class="relative overflow-hidden border-y border-brass/15 bg-gradient-to-b from-brass/[0.06] to-transparent">
+    <div class="mx-auto max-w-6xl px-6 py-14 md:px-10">
+      <div class="flex items-center gap-2.5">
+        <span class="pulse-dot h-2 w-2 rounded-full bg-brass-bright"></span>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">New this week</p>
+      </div>
+      <h2 class="mt-4 font-display text-3xl leading-tight text-paper md:text-4xl">Just dropped.</h2>
+      <p class="mt-3 max-w-xl text-ash">
+        Fresh off the bench — the latest additions to the catalog, playable right now.
+      </p>
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        {justDropped.map((t) => <TrackCard {...t} />)}
+      </div>
+    </div>
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pb-24 md:px-10">
@@ -135,3 +124,20 @@ const allTags = [...new Set(tracks.flatMap((t) => t.tags))].sort();
     initFilters();
   }
 </script>
+
+<style>
+  .pulse-dot {
+    box-shadow: 0 0 0 0 rgba(176, 141, 87, 0.55);
+    animation: pulse-dot 2s ease-out infinite;
+  }
+  @keyframes pulse-dot {
+    to {
+      box-shadow: 0 0 0 8px rgba(176, 141, 87, 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pulse-dot {
+      animation: none;
+    }
+  }
+</style>
