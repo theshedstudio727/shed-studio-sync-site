@@ -1,16 +1,30 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import workspacePhoto from '../assets/photos/desk-speakers.jpg';
 ---
 
 <Layout
   title="About"
   description="The Shed Studio is a San Diego-based music production studio, run by producer Hau Tran, built for sync licensing."
 >
-  <section class="mx-auto max-w-6xl px-6 pb-16 pt-20 md:px-10">
-    <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">About</p>
-    <h1 class="mt-6 max-w-2xl font-display text-4xl leading-tight text-paper md:text-5xl">
-      One producer. Built to move fast.
-    </h1>
+  <section class="mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-20 md:grid-cols-[1fr_0.8fr] md:items-end md:px-10">
+    <div>
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">About</p>
+      <h1 class="mt-6 font-display text-4xl leading-tight text-paper md:text-5xl">
+        One producer. Built to move fast.
+      </h1>
+    </div>
+    <div class="relative aspect-[16/10] overflow-hidden rounded-sm">
+      <Image
+        src={workspacePhoto}
+        alt="The studio workspace, monitors and desk"
+        class="h-full w-full object-cover"
+        widths={[400, 800, 1200]}
+        sizes="(min-width: 768px) 45vw, 100vw"
+      />
+      <div class="absolute inset-0 ring-1 ring-inset ring-paper/10"></div>
+    </div>
   </section>
 
   <section class="mx-auto max-w-6xl px-6 pb-24 md:px-10">

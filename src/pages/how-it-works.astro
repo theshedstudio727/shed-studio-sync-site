@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
+import mixingBoardPhoto from '../assets/photos/mixing-board.jpg';
 
 const steps = [
   {
@@ -41,18 +43,30 @@ const steps = [
   </section>
 
   <section class="border-t border-paper/10 bg-ink-deep">
-    <div class="mx-auto max-w-6xl px-6 py-24 md:px-10">
-      <h2 class="max-w-2xl font-display text-3xl leading-tight text-paper md:text-4xl">
-        On the AI question — straight answer.
-      </h2>
-      <p class="mt-6 max-w-xl text-ash">
-        This isn't AI-generated music. Hau is a working producer, and AI is
-        one tool in his process — useful for early ideation and laying out
-        structure — but the production, arrangement, and final creative
-        decisions are entirely his. It's how one producer can offer the
-        range and turnaround of a much bigger team, without the music
-        losing the human hand behind it.
-      </p>
+    <div class="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-2 md:items-center md:px-10">
+      <div>
+        <h2 class="max-w-lg font-display text-3xl leading-tight text-paper md:text-4xl">
+          On the AI question — straight answer.
+        </h2>
+        <p class="mt-6 max-w-md text-ash">
+          This isn't AI-generated music. Hau is a working producer, and AI is
+          one tool in his process — useful for early ideation and laying out
+          structure — but the production, arrangement, and final creative
+          decisions are entirely his. It's how one producer can offer the
+          range and turnaround of a much bigger team, without the music
+          losing the human hand behind it.
+        </p>
+      </div>
+      <div class="relative aspect-[4/3] overflow-hidden rounded-sm">
+        <Image
+          src={mixingBoardPhoto}
+          alt="Close-up of a mixing console mid-session"
+          class="h-full w-full object-cover"
+          widths={[400, 800, 1200]}
+          sizes="(min-width: 768px) 50vw, 100vw"
+        />
+        <div class="absolute inset-0 ring-1 ring-inset ring-paper/10"></div>
+      </div>
     </div>
   </section>
 

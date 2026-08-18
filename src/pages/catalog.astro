@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import TrackCard from '../components/TrackCard.astro';
+import headerPhoto from '../assets/photos/headphones-mic.jpg';
 
 const tracks = [
   { title: '2000s Neo-Soul, Reworked as Melodic Techno', tags: ['Soul', 'Electronic', 'Moody'], bpm: 122, key: 'F min', youtubeId: 'O0jXZ6HIFI0' },
@@ -18,7 +20,18 @@ const allTags = [...new Set(tracks.flatMap((t) => t.tags))].sort();
   title="Catalog"
   description="Browse original tracks by mood, genre, and era."
 >
-  <section class="mx-auto max-w-6xl px-6 pb-10 pt-20 md:px-10">
+  <section class="relative h-[40vh] min-h-[280px] overflow-hidden">
+    <Image
+      src={headerPhoto}
+      alt="Studio microphone and headphones"
+      class="h-full w-full object-cover"
+      widths={[600, 1200, 1800]}
+      sizes="100vw"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-ink/30"></div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-10 pt-14 md:px-10">
     <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">Catalog</p>
     <h1 class="mt-6 max-w-2xl font-display text-4xl leading-tight text-paper md:text-5xl">
       A working sample of the range.

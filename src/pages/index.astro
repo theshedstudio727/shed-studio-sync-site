@@ -1,6 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import TrackCard from '../components/TrackCard.astro';
+import heroPhoto from '../assets/photos/keyboard-dark-room.jpg';
+import processPhoto from '../assets/photos/production-setup.jpg';
 
 const previewTracks = [
   { title: '2000s Neo-Soul, Reworked as Melodic Techno', tags: ['Soul', 'Electronic', 'Moody'], bpm: 122, key: 'F min', youtubeId: 'O0jXZ6HIFI0' },
@@ -20,31 +23,44 @@ const previewTracks = [
       alt=""
       class="pointer-events-none absolute -right-40 top-0 h-full w-auto opacity-[0.04] mix-blend-screen"
     />
-    <div class="relative mx-auto max-w-6xl px-6 pb-24 pt-20 md:px-10 md:pb-36 md:pt-28">
-      <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">
-        Sync licensing · Film · Games · Animation
-      </p>
-      <h1 class="mt-6 max-w-3xl font-display text-5xl leading-[1.05] text-paper md:text-7xl">
-        Music built for your scene, not pulled from a catalog.
-      </h1>
-      <p class="mt-8 max-w-xl text-lg leading-relaxed text-ash">
-        Original, fully custom scores composed by a working producer —
-        turned around in days, not weeks, across a genre and era range most
-        libraries can't touch.
-      </p>
-      <div class="mt-10 flex flex-wrap items-center gap-5">
-        <a
-          href="/contact"
-          class="rounded-full bg-brass px-7 py-3 font-mono text-xs uppercase tracking-[0.15em] text-ink-deep transition-colors hover:bg-brass-bright"
-        >
-          Start a project
-        </a>
-        <a
-          href="/catalog"
-          class="font-mono text-xs uppercase tracking-[0.15em] text-paper/80 underline decoration-brass/40 underline-offset-4 hover:text-paper"
-        >
-          Hear the catalog →
-        </a>
+    <div class="relative mx-auto grid max-w-6xl gap-12 px-6 pb-16 pt-20 md:grid-cols-[1.1fr_0.9fr] md:items-center md:px-10 md:pb-24 md:pt-28">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">
+          Sync licensing · Film · Games · Animation
+        </p>
+        <h1 class="mt-6 font-display text-5xl leading-[1.05] text-paper md:text-6xl">
+          Music built for your scene, not pulled from a catalog.
+        </h1>
+        <p class="mt-8 max-w-xl text-lg leading-relaxed text-ash">
+          Original, fully custom scores composed by a working producer —
+          turned around in days, not weeks, across a genre and era range most
+          libraries can't touch.
+        </p>
+        <div class="mt-10 flex flex-wrap items-center gap-5">
+          <a
+            href="/contact"
+            class="rounded-full bg-brass px-7 py-3 font-mono text-xs uppercase tracking-[0.15em] text-ink-deep transition-colors hover:bg-brass-bright"
+          >
+            Start a project
+          </a>
+          <a
+            href="/catalog"
+            class="font-mono text-xs uppercase tracking-[0.15em] text-paper/80 underline decoration-brass/40 underline-offset-4 hover:text-paper"
+          >
+            Hear the catalog →
+          </a>
+        </div>
+      </div>
+      <div class="relative aspect-[4/5] overflow-hidden rounded-sm md:aspect-[3/4]">
+        <Image
+          src={heroPhoto}
+          alt="Synthesizer and studio monitor lit in the dark"
+          class="h-full w-full object-cover"
+          widths={[400, 800, 1200]}
+          sizes="(min-width: 768px) 40vw, 100vw"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/20"></div>
+        <div class="absolute inset-0 ring-1 ring-inset ring-paper/10"></div>
       </div>
     </div>
   </section>
@@ -81,21 +97,33 @@ const previewTracks = [
 
   <!-- Process teaser -->
   <section class="border-t border-paper/10 bg-ink-deep">
-    <div class="mx-auto max-w-6xl px-6 py-24 md:px-10">
-      <h2 class="max-w-2xl font-display text-3xl leading-tight text-paper md:text-4xl">
-        Produced by a real producer. Accelerated by AI-assisted tools.
-      </h2>
-      <p class="mt-6 max-w-xl text-ash">
-        Every track starts and ends with hands-on production — AI helps with
-        ideation and structure along the way, so you get more range and
-        faster turnaround without losing the craft behind it.
-      </p>
-      <a
-        href="/how-it-works"
-        class="mt-8 inline-block font-mono text-xs uppercase tracking-[0.15em] text-brass-bright underline decoration-brass/40 underline-offset-4 hover:text-brass"
-      >
-        See how it works →
-      </a>
+    <div class="mx-auto grid max-w-6xl gap-12 px-6 py-24 md:grid-cols-2 md:items-center md:px-10">
+      <div class="relative aspect-[4/3] overflow-hidden rounded-sm md:order-2">
+        <Image
+          src={processPhoto}
+          alt="Producer's workstation mid-session"
+          class="h-full w-full object-cover"
+          widths={[400, 800, 1200]}
+          sizes="(min-width: 768px) 50vw, 100vw"
+        />
+        <div class="absolute inset-0 ring-1 ring-inset ring-paper/10"></div>
+      </div>
+      <div class="md:order-1">
+        <h2 class="max-w-lg font-display text-3xl leading-tight text-paper md:text-4xl">
+          Produced by a real producer. Accelerated by AI-assisted tools.
+        </h2>
+        <p class="mt-6 max-w-md text-ash">
+          Every track starts and ends with hands-on production — AI helps with
+          ideation and structure along the way, so you get more range and
+          faster turnaround without losing the craft behind it.
+        </p>
+        <a
+          href="/how-it-works"
+          class="mt-8 inline-block font-mono text-xs uppercase tracking-[0.15em] text-brass-bright underline decoration-brass/40 underline-offset-4 hover:text-brass"
+        >
+          See how it works →
+        </a>
+      </div>
     </div>
   </section>
 </Layout>
