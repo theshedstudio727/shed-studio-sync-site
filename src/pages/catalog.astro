@@ -61,7 +61,7 @@ const allTags = [...new Set(tracks.flatMap((t) => t.tags))].sort();
       </div>
       <h2 class="mt-4 font-display text-3xl leading-tight text-paper md:text-4xl">Just dropped.</h2>
       <p class="mt-3 max-w-xl text-ash">
-        Fresh off the bench — the latest additions to the catalog, playable right now.
+        Fresh off the bench. The latest additions to the catalog, playable right now.
       </p>
       <div class="mt-8 grid gap-4 md:grid-cols-3">
         {justDropped.map((t) => <TrackCard {...t} />)}
