@@ -6,9 +6,10 @@ interface Props {
   key?: string;
   youtubeId?: string;
   audioUrl?: string;
+  vertical?: boolean;
 }
 
-const { title, tags, bpm, key, youtubeId, audioUrl } = Astro.props;
+const { title, tags, bpm, key, youtubeId, audioUrl, vertical } = Astro.props;
 const uid = `track-${youtubeId ?? audioUrl?.split('/').pop()?.replace(/\W/g, '') ?? title.replace(/\W/g, '')}`;
 ---
 
@@ -17,6 +18,7 @@ const uid = `track-${youtubeId ?? audioUrl?.split('/').pop()?.replace(/\W/g, '')
   data-track={uid}
   data-youtube-id={youtubeId ?? ''}
   data-audio-url={audioUrl ?? ''}
+  data-vertical={vertical ? '1' : ''}
 >
   <div class="flex items-start gap-5">
     <button
@@ -78,10 +80,14 @@ const uid = `track-${youtubeId ?? audioUrl?.split('/').pop()?.replace(/\W/g, '')
           disc?.classList.add('spinning');
           const youtubeId = card.dataset.youtubeId;
           const audioUrl = card.dataset.audioUrl;
+          const isVertical = card.dataset.vertical === '1';
           if (audioUrl) {
             slot.innerHTML = `<audio class="w-full" controls autoplay src="${audioUrl}"></audio>`;
           } else if (youtubeId) {
-            slot.innerHTML = `<iframe class="w-full aspect-video" src="https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1" title="preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            const src = `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1`;
+            slot.innerHTML = isVertical
+              ? `<div class="mx-auto w-full max-w-[300px] overflow-hidden rounded-[1.75rem] border-4 border-ink-deep bg-ink-deep shadow-2xl"><iframe class="aspect-[9/16] w-full" src="${src}" title="preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`
+              : `<iframe class="aspect-video w-full" src="${src}" title="preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
           }
           slot.classList.remove('hidden');
         }
