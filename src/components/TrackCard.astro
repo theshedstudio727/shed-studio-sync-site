@@ -88,7 +88,15 @@ const uid = `track-${youtubeId ?? audioUrl?.split('/').pop()?.replace(/\W/g, '')
       });
     });
   }
-  document.addEventListener('astro:page-load', initTrackCards);
+  // astro:page-load only fires with View Transitions enabled, which this
+  // site doesn't use - a plain DOMContentLoaded (with an already-loaded
+  // fallback, since module scripts can execute after the event already
+  // fired) is what actually runs here.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTrackCards);
+  } else {
+    initTrackCards();
+  }
 </script>
 
 <style>

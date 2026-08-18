@@ -129,5 +129,9 @@ const allTags = [...new Set(tracks.flatMap((t) => t.tags))].sort();
       });
     });
   }
-  document.addEventListener('astro:page-load', initFilters);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFilters);
+  } else {
+    initFilters();
+  }
 </script>
