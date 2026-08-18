@@ -1,17 +1,101 @@
 ---
+import Layout from '../layouts/Layout.astro';
+import TrackCard from '../components/TrackCard.astro';
 
+const previewTracks = [
+  { title: '2000s Neo-Soul, Reworked as Melodic Techno', tags: ['Soul', 'Electronic', 'Moody'], bpm: 122, key: 'F min', youtubeId: 'O0jXZ6HIFI0' },
+  { title: 'A Lost 80s Japanese City Pop Night Drive Anthem', tags: ['City Pop', '80s', 'Nocturnal'], bpm: 108, key: 'D maj', youtubeId: 'x0AAfaj-AL0' },
+  { title: 'A Lost 80s Italo Disco Anthem', tags: ['Disco', '80s', 'Euphoric'], bpm: 118, key: 'A min', youtubeId: 'ITejVPeBs_s' },
+];
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+  title="Original Music for Film, Games & Animation"
+  description="The Shed Studio composes original, fully custom music for sync licensing — produced by a real producer, accelerated by AI-assisted tools."
+>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <img
+      src="/brand/pattern.png"
+      alt=""
+      class="pointer-events-none absolute -right-40 top-0 h-full w-auto opacity-[0.04] mix-blend-screen"
+    />
+    <div class="relative mx-auto max-w-6xl px-6 pb-24 pt-20 md:px-10 md:pb-36 md:pt-28">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">
+        Sync licensing · Film · Games · Animation
+      </p>
+      <h1 class="mt-6 max-w-3xl font-display text-5xl leading-[1.05] text-paper md:text-7xl">
+        Music built for your scene, not pulled from a catalog.
+      </h1>
+      <p class="mt-8 max-w-xl text-lg leading-relaxed text-ash">
+        Original, fully custom scores composed by a working producer —
+        turned around in days, not weeks, across a genre and era range most
+        libraries can't touch.
+      </p>
+      <div class="mt-10 flex flex-wrap items-center gap-5">
+        <a
+          href="/contact"
+          class="rounded-full bg-brass px-7 py-3 font-mono text-xs uppercase tracking-[0.15em] text-ink-deep transition-colors hover:bg-brass-bright"
+        >
+          Start a project
+        </a>
+        <a
+          href="/catalog"
+          class="font-mono text-xs uppercase tracking-[0.15em] text-paper/80 underline decoration-brass/40 underline-offset-4 hover:text-paper"
+        >
+          Hear the catalog →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats strip -->
+  <section class="border-y border-paper/10 bg-ink-deep">
+    <div class="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-10 md:grid-cols-4 md:px-10">
+      {[
+        ['48hrs', 'typical turnaround'],
+        ['Any era', 'genre & decade range'],
+        ['100%', 'original composition'],
+        ['1', 'producer, start to finish'],
+      ].map(([stat, label]) => (
+        <div>
+          <p class="font-display text-3xl text-brass-bright">{stat}</p>
+          <p class="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ash">{label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Catalog preview -->
+  <section class="mx-auto max-w-6xl px-6 py-24 md:px-10">
+    <div class="flex items-end justify-between">
+      <h2 class="font-display text-3xl text-paper md:text-4xl">A taste of the range</h2>
+      <a href="/catalog" class="hidden font-mono text-xs uppercase tracking-[0.15em] text-brass-bright hover:text-brass md:block">
+        Full catalog →
+      </a>
+    </div>
+    <div class="mt-10 grid gap-4">
+      {previewTracks.map((t) => <TrackCard {...t} />)}
+    </div>
+  </section>
+
+  <!-- Process teaser -->
+  <section class="border-t border-paper/10 bg-ink-deep">
+    <div class="mx-auto max-w-6xl px-6 py-24 md:px-10">
+      <h2 class="max-w-2xl font-display text-3xl leading-tight text-paper md:text-4xl">
+        Produced by a real producer. Accelerated by AI-assisted tools.
+      </h2>
+      <p class="mt-6 max-w-xl text-ash">
+        Every track starts and ends with hands-on production — AI helps with
+        ideation and structure along the way, so you get more range and
+        faster turnaround without losing the craft behind it.
+      </p>
+      <a
+        href="/how-it-works"
+        class="mt-8 inline-block font-mono text-xs uppercase tracking-[0.15em] text-brass-bright underline decoration-brass/40 underline-offset-4 hover:text-brass"
+      >
+        See how it works →
+      </a>
+    </div>
+  </section>
+</Layout>

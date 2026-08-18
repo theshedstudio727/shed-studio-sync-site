@@ -1,0 +1,96 @@
+---
+interface Props {
+  title: string;
+  tags: string[];
+  bpm: number;
+  key: string;
+  youtubeId: string;
+}
+
+const { title, tags, bpm, key, youtubeId } = Astro.props;
+const uid = `track-${youtubeId}`;
+---
+
+<div class="group border border-paper/10 p-6 transition-colors hover:border-brass/40" data-track={uid}>
+  <div class="flex items-start gap-5">
+    <button
+      class="vinyl-toggle relative h-16 w-16 flex-shrink-0 cursor-pointer"
+      aria-label={`Play ${title}`}
+      data-uid={uid}
+    >
+      <svg viewBox="0 0 100 100" class="vinyl-disc h-full w-full">
+        <circle cx="50" cy="50" r="49" fill="#0F1620" stroke="#9BA3AD" stroke-opacity="0.25" />
+        <circle cx="50" cy="50" r="38" fill="none" stroke="#9BA3AD" stroke-opacity="0.18" />
+        <circle cx="50" cy="50" r="29" fill="none" stroke="#9BA3AD" stroke-opacity="0.18" />
+        <circle cx="50" cy="50" r="20" fill="none" stroke="#9BA3AD" stroke-opacity="0.18" />
+        <circle cx="50" cy="50" r="15" fill="#B08D57" />
+        <circle cx="50" cy="50" r="2.5" fill="#0F1620" />
+      </svg>
+      <span class="play-icon pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100">
+        <svg viewBox="0 0 24 24" class="h-5 w-5 fill-paper drop-shadow">
+          <path d="M8 5v14l11-7z"></path>
+        </svg>
+      </span>
+    </button>
+    <div class="min-w-0 flex-1">
+      <h3 class="font-display text-lg leading-snug text-paper">{title}</h3>
+      <div class="mt-2 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <span class="font-mono text-[10px] uppercase tracking-[0.1em] text-ash">{tag}</span>
+        ))}
+      </div>
+      <p class="mt-3 font-mono text-[11px] text-ash/70">{bpm} BPM · {key}</p>
+    </div>
+  </div>
+  <div class="player-slot mt-4 hidden"></div>
+</div>
+
+<script>
+  function initTrackCards() {
+    document.querySelectorAll<HTMLButtonElement>('.vinyl-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('[data-track]');
+        const slot = card?.querySelector('.player-slot');
+        const disc = btn.querySelector('.vinyl-disc');
+        const uid = btn.dataset.uid;
+        if (!slot || !uid) return;
+
+        const isPlaying = disc?.classList.contains('spinning');
+
+        // Stop every other card first - only one plays at a time.
+        document.querySelectorAll('.vinyl-disc.spinning').forEach((d) => d.classList.remove('spinning'));
+        document.querySelectorAll('.player-slot').forEach((s) => {
+          s.classList.add('hidden');
+          s.innerHTML = '';
+        });
+
+        if (!isPlaying) {
+          disc?.classList.add('spinning');
+          const videoId = uid.replace('track-', '');
+          slot.innerHTML = `<iframe class="w-full aspect-video" src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" title="preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+          slot.classList.remove('hidden');
+        }
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', initTrackCards);
+</script>
+
+<style>
+  .vinyl-disc {
+    transition: transform 0.3s ease-out;
+  }
+  .vinyl-disc.spinning {
+    animation: spin 3.5s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vinyl-disc.spinning {
+      animation: none;
+    }
+  }
+</style>

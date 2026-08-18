@@ -1,0 +1,32 @@
+---
+const links = [
+  { href: '/catalog', label: 'Catalog' },
+  { href: '/how-it-works', label: 'How It Works' },
+  { href: '/licensing', label: 'Licensing' },
+  { href: '/about', label: 'About' },
+];
+---
+
+<header class="border-b border-paper/10">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6 md:px-10">
+    <a href="/" class="flex items-center gap-3">
+      <img src="/brand/logo-paper.png" alt="The Shed Studio" class="h-8 w-auto opacity-90" />
+    </a>
+    <nav class="hidden items-center gap-8 md:flex">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class="font-mono text-xs uppercase tracking-[0.15em] text-ash transition-colors hover:text-paper"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+    <a
+      href="/contact"
+      class="rounded-full border border-brass/60 px-5 py-2 font-mono text-xs uppercase tracking-[0.15em] text-brass-bright transition-colors hover:border-brass hover:bg-brass/10"
+    >
+      Let's talk
+    </a>
+  </div>
+</header>

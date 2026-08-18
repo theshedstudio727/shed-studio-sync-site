@@ -1,0 +1,83 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TrackCard from '../components/TrackCard.astro';
+
+const tracks = [
+  { title: '2000s Neo-Soul, Reworked as Melodic Techno', tags: ['Soul', 'Electronic', 'Moody'], bpm: 122, key: 'F min', youtubeId: 'O0jXZ6HIFI0' },
+  { title: '60s Southern Soul, Reworked as Drum & Bass', tags: ['Soul', 'Drum & Bass', 'Energetic'], bpm: 174, key: 'C min', youtubeId: 'X3KI97TyQcs' },
+  { title: 'A Lost 80s Japanese City Pop Night Drive Anthem', tags: ['City Pop', '80s', 'Nocturnal'], bpm: 108, key: 'D maj', youtubeId: 'x0AAfaj-AL0' },
+  { title: 'A Lost 80s Italo Disco Anthem', tags: ['Disco', '80s', 'Euphoric'], bpm: 118, key: 'A min', youtubeId: 'ITejVPeBs_s' },
+  { title: 'A Golden-Era 1960s Vietnamese Bolero Ballad', tags: ['Bolero', 'Vietnamese', 'Romantic'], bpm: 76, key: 'G maj', youtubeId: 'xZuuM4yk5WY' },
+  { title: 'A Golden-Era 90s Bollywood-Style Romantic Ballad', tags: ['Bollywood', '90s', 'Romantic'], bpm: 88, key: 'Bb maj', youtubeId: 'ECM_1ft5g8M' },
+];
+
+const allTags = [...new Set(tracks.flatMap((t) => t.tags))].sort();
+---
+
+<Layout
+  title="Catalog"
+  description="Browse original tracks by mood, genre, and era."
+>
+  <section class="mx-auto max-w-6xl px-6 pb-10 pt-20 md:px-10">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">Catalog</p>
+    <h1 class="mt-6 max-w-2xl font-display text-4xl leading-tight text-paper md:text-5xl">
+      A working sample of the range.
+    </h1>
+    <p class="mt-6 max-w-xl text-ash">
+      This is a small preview set, not the full catalog — every project is
+      composed fresh for its scene. Filter by mood or genre to get a feel
+      for the range, then tell us what you actually need.
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-24 md:px-10">
+    <div id="tag-filters" class="mb-8 flex flex-wrap gap-2">
+      <button
+        data-tag="all"
+        class="tag-btn active rounded-full border border-brass/60 bg-brass/10 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-brass-bright"
+      >
+        All
+      </button>
+      {allTags.map((tag) => (
+        <button
+          data-tag={tag}
+          class="tag-btn rounded-full border border-paper/15 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-ash transition-colors hover:border-paper/40 hover:text-paper"
+        >
+          {tag}
+        </button>
+      ))}
+    </div>
+    <div id="track-grid" class="grid gap-4">
+      {tracks.map((t) => (
+        <div class="track-wrap" data-tags={t.tags.join('|')}>
+          <TrackCard {...t} />
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<script>
+  function initFilters() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.tag-btn');
+    const items = document.querySelectorAll<HTMLElement>('.track-wrap');
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        buttons.forEach((b) => {
+          b.classList.remove('active', 'bg-brass/10', 'border-brass/60', 'text-brass-bright');
+          b.classList.add('border-paper/15', 'text-ash');
+        });
+        btn.classList.add('active', 'bg-brass/10', 'border-brass/60', 'text-brass-bright');
+        btn.classList.remove('border-paper/15', 'text-ash');
+
+        const tag = btn.dataset.tag;
+        items.forEach((item) => {
+          const tags = item.dataset.tags?.split('|') ?? [];
+          item.style.display = tag === 'all' || tags.includes(tag ?? '') ? '' : 'none';
+        });
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', initFilters);
+</script>

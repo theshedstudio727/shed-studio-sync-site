@@ -1,0 +1,80 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const tiers = [
+  {
+    name: 'Project License',
+    price: 'From $450',
+    body: 'Non-exclusive license for a single project — a short film, an indie game level, a trailer. One custom-composed track, delivered with stems.',
+    features: ['Non-exclusive, one project', 'Custom composition', 'Stems included', '1 revision'],
+  },
+  {
+    name: 'Exclusive License',
+    price: 'Custom quote',
+    body: 'Full exclusive rights to a track for your project or catalog — nobody else licenses it after you. Priced per project scope and usage.',
+    features: ['Exclusive rights', 'Custom composition', 'Stems + alternate mixes', 'Priority turnaround'],
+    featured: true,
+  },
+  {
+    name: 'Ongoing / Catalog',
+    price: 'Custom quote',
+    body: 'For studios with recurring music needs — a season of episodes, a game with multiple levels, an ongoing campaign. Volume-based terms.',
+    features: ['Multiple tracks', 'Dedicated turnaround SLA', 'Direct line to the producer'],
+  },
+];
+---
+
+<Layout
+  title="Licensing"
+  description="Licensing tiers for Shed Studio's original, custom-composed music."
+>
+  <section class="mx-auto max-w-6xl px-6 pb-16 pt-20 md:px-10">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">Licensing</p>
+    <h1 class="mt-6 max-w-2xl font-display text-4xl leading-tight text-paper md:text-5xl">
+      Straightforward terms. Real quotes.
+    </h1>
+    <p class="mt-6 max-w-xl text-ash">
+      Starting prices below cover a typical single-project license. Anything
+      exclusive, ongoing, or larger in scope gets a custom quote based on
+      usage — tell us about the project and we'll get back to you fast.
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-24 md:px-10">
+    <div class="grid gap-6 md:grid-cols-3">
+      {tiers.map((tier) => (
+        <div
+          class:list={[
+            'flex flex-col border p-8',
+            tier.featured ? 'border-brass/60 bg-brass/5' : 'border-paper/10',
+          ]}
+        >
+          <h3 class="font-display text-xl text-paper">{tier.name}</h3>
+          <p class="mt-3 font-display text-2xl text-brass-bright">{tier.price}</p>
+          <p class="mt-4 text-sm leading-relaxed text-ash">{tier.body}</p>
+          <ul class="mt-6 flex-1 space-y-2">
+            {tier.features.map((f) => (
+              <li class="font-mono text-[11px] uppercase tracking-[0.08em] text-ash/80">— {f}</li>
+            ))}
+          </ul>
+          <a
+            href="/contact"
+            class:list={[
+              'mt-8 inline-block rounded-full px-5 py-2.5 text-center font-mono text-xs uppercase tracking-[0.15em] transition-colors',
+              tier.featured
+                ? 'bg-brass text-ink-deep hover:bg-brass-bright'
+                : 'border border-paper/20 text-paper hover:border-brass/60 hover:text-brass-bright',
+            ]}
+          >
+            Get a quote
+          </a>
+        </div>
+      ))}
+    </div>
+    <p class="mt-10 font-mono text-[11px] text-ash/60">
+      All licenses are original, custom compositions — nothing here is a
+      pre-cleared catalog track. Terms above are starting points, not fixed
+      pricing; every quote reflects your actual project.
+    </p>
+  </section>
+</Layout>

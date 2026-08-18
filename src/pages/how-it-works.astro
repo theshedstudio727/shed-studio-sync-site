@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const steps = [
+  {
+    title: 'Tell us about the scene',
+    body: "Send the footage, references, or just a description — the mood, pacing, era, and role the music needs to play. The more context, the tighter the first draft lands.",
+  },
+  {
+    title: 'A real producer builds it',
+    body: "Hau — the producer behind every Shed Studio track — writes and produces the piece by hand. AI-assisted tools help with early ideation and structuring, but every arrangement, mix, and final call is his.",
+  },
+  {
+    title: 'You get a track built to fit',
+    body: 'Delivered in the format you need, with stems available on request. One included revision if it needs to move — most projects don’t.',
+  },
+];
+---
+
+<Layout
+  title="How It Works"
+  description="How Shed Studio builds custom music for sync licensing, from brief to delivery."
+>
+  <section class="mx-auto max-w-6xl px-6 pb-16 pt-20 md:px-10">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-brass-bright">Process</p>
+    <h1 class="mt-6 max-w-2xl font-display text-4xl leading-tight text-paper md:text-5xl">
+      Three steps. One producer. No surprises.
+    </h1>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 pb-24 md:px-10">
+    <div class="grid gap-px overflow-hidden rounded-sm border border-paper/10 md:grid-cols-3">
+      {steps.map((step, i) => (
+        <div class="bg-ink-deep p-8">
+          <p class="font-mono text-xs text-brass-bright">{String(i + 1).padStart(2, '0')}</p>
+          <h3 class="mt-4 font-display text-xl text-paper">{step.title}</h3>
+          <p class="mt-4 text-sm leading-relaxed text-ash">{step.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-t border-paper/10 bg-ink-deep">
+    <div class="mx-auto max-w-6xl px-6 py-24 md:px-10">
+      <h2 class="max-w-2xl font-display text-3xl leading-tight text-paper md:text-4xl">
+        On the AI question — straight answer.
+      </h2>
+      <p class="mt-6 max-w-xl text-ash">
+        This isn't AI-generated music. Hau is a working producer, and AI is
+        one tool in his process — useful for early ideation and laying out
+        structure — but the production, arrangement, and final creative
+        decisions are entirely his. It's how one producer can offer the
+        range and turnaround of a much bigger team, without the music
+        losing the human hand behind it.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 py-24 text-center md:px-10">
+    <h2 class="font-display text-3xl text-paper md:text-4xl">Have a project in mind?</h2>
+    <a
+      href="/contact"
+      class="mt-8 inline-block rounded-full bg-brass px-7 py-3 font-mono text-xs uppercase tracking-[0.15em] text-ink-deep transition-colors hover:bg-brass-bright"
+    >
+      Start a project
+    </a>
+  </section>
+</Layout>
