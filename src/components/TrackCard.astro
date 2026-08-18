@@ -2,16 +2,22 @@
 interface Props {
   title: string;
   tags: string[];
-  bpm: number;
-  key: string;
-  youtubeId: string;
+  bpm?: number;
+  key?: string;
+  youtubeId?: string;
+  audioUrl?: string;
 }
 
-const { title, tags, bpm, key, youtubeId } = Astro.props;
-const uid = `track-${youtubeId}`;
+const { title, tags, bpm, key, youtubeId, audioUrl } = Astro.props;
+const uid = `track-${youtubeId ?? audioUrl?.split('/').pop()?.replace(/\W/g, '') ?? title.replace(/\W/g, '')}`;
 ---
 
-<div class="group border border-paper/10 p-6 transition-colors hover:border-brass/40" data-track={uid}>
+<div
+  class="group border border-paper/10 p-6 transition-colors hover:border-brass/40"
+  data-track={uid}
+  data-youtube-id={youtubeId ?? ''}
+  data-audio-url={audioUrl ?? ''}
+>
   <div class="flex items-start gap-5">
     <button
       class="vinyl-toggle relative h-16 w-16 flex-shrink-0 cursor-pointer"
@@ -39,7 +45,11 @@ const uid = `track-${youtubeId}`;
           <span class="font-mono text-[10px] uppercase tracking-[0.1em] text-ash">{tag}</span>
         ))}
       </div>
-      <p class="mt-3 font-mono text-[11px] text-ash/70">{bpm} BPM · {key}</p>
+      {(bpm || key) && (
+        <p class="mt-3 font-mono text-[11px] text-ash/70">
+          {bpm ? `${bpm} BPM` : ''}{bpm && key ? ' · ' : ''}{key ?? ''}
+        </p>
+      )}
     </div>
   </div>
   <div class="player-slot mt-4 hidden"></div>
@@ -49,11 +59,11 @@ const uid = `track-${youtubeId}`;
   function initTrackCards() {
     document.querySelectorAll<HTMLButtonElement>('.vinyl-toggle').forEach((btn) => {
       btn.addEventListener('click', () => {
-        const card = btn.closest('[data-track]');
+        const card = btn.closest<HTMLElement>('[data-track]');
         const slot = card?.querySelector('.player-slot');
         const disc = btn.querySelector('.vinyl-disc');
         const uid = btn.dataset.uid;
-        if (!slot || !uid) return;
+        if (!slot || !uid || !card) return;
 
         const isPlaying = disc?.classList.contains('spinning');
 
@@ -66,8 +76,13 @@ const uid = `track-${youtubeId}`;
 
         if (!isPlaying) {
           disc?.classList.add('spinning');
-          const videoId = uid.replace('track-', '');
-          slot.innerHTML = `<iframe class="w-full aspect-video" src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1" title="preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+          const youtubeId = card.dataset.youtubeId;
+          const audioUrl = card.dataset.audioUrl;
+          if (audioUrl) {
+            slot.innerHTML = `<audio class="w-full" controls autoplay src="${audioUrl}"></audio>`;
+          } else if (youtubeId) {
+            slot.innerHTML = `<iframe class="w-full aspect-video" src="https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1" title="preview" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+          }
           slot.classList.remove('hidden');
         }
       });

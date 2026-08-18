@@ -3,8 +3,9 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import TrackCard from '../components/TrackCard.astro';
 import headerPhoto from '../assets/photos/headphones-mic.jpg';
+import { fetchCatalog } from '../lib/catalog';
 
-const tracks = [
+const curatedTracks = [
   { title: '2000s Neo-Soul, Reworked as Melodic Techno', tags: ['Soul', 'Electronic', 'Moody'], bpm: 122, key: 'F min', youtubeId: 'O0jXZ6HIFI0' },
   { title: '60s Southern Soul, Reworked as Drum & Bass', tags: ['Soul', 'Drum & Bass', 'Energetic'], bpm: 174, key: 'C min', youtubeId: 'X3KI97TyQcs' },
   { title: 'A Lost 80s Japanese City Pop Night Drive Anthem', tags: ['City Pop', '80s', 'Nocturnal'], bpm: 108, key: 'D maj', youtubeId: 'x0AAfaj-AL0' },
@@ -12,6 +13,15 @@ const tracks = [
   { title: 'A Golden-Era 1960s Vietnamese Bolero Ballad', tags: ['Bolero', 'Vietnamese', 'Romantic'], bpm: 76, key: 'G maj', youtubeId: 'xZuuM4yk5WY' },
   { title: 'A Golden-Era 90s Bollywood-Style Romantic Ballad', tags: ['Bollywood', '90s', 'Romantic'], bpm: 88, key: 'Bb maj', youtubeId: 'ECM_1ft5g8M' },
 ];
+
+// Real catalog from Supabase (see src/lib/catalog.ts) takes priority once it
+// has data. Falls back to the curated YouTube-embedded picks above when the
+// live catalog is empty - true as of 2026-08-18, the table was just created.
+const liveCatalog = await fetchCatalog();
+const usingLiveCatalog = liveCatalog.length > 0;
+const tracks = usingLiveCatalog
+  ? liveCatalog.map((t) => ({ title: t.title, tags: t.styleTags, audioUrl: t.audioUrl }))
+  : curatedTracks;
 
 const allTags = [...new Set(tracks.flatMap((t) => t.tags))].sort();
 ---
@@ -37,9 +47,9 @@ const allTags = [...new Set(tracks.flatMap((t) => t.tags))].sort();
       A working sample of the range.
     </h1>
     <p class="mt-6 max-w-xl text-ash">
-      This is a small preview set, not the full catalog — every project is
-      composed fresh for its scene. Filter by mood or genre to get a feel
-      for the range, then tell us what you actually need.
+      {usingLiveCatalog
+        ? 'Every track below is a real, original composition from the catalog. Filter by mood or genre to get a feel for the range, then tell us what you actually need.'
+        : "This is a small preview set, not the full catalog — every project is composed fresh for its scene. Filter by mood or genre to get a feel for the range, then tell us what you actually need."}
     </p>
   </section>
 
